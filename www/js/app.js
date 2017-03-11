@@ -34,31 +34,38 @@ angular.module('starter', ['ionic', 'ngCordova'])
             okText:'Create task'
 
         }).then(function(res){
-            if (res) $scope.tasks.push(res);
-            alert(JSON.stringify($scope.tasks))
+          var pos = $scope.tasks.indexOf(res);
+            if (res) 
+             if (pos == -1) {
+          $scope.tasks.push(res);
+      }
+      else {
+         $scope.tasks.splice(pos, 1);
+      }
+           var localarray = [];  
+       for (var i = 0; i < $scope.tasks.length; i++)  //loop for storing the id in local localStorage
+      {
+        $window.localStorage[i] = $scope.tasks[i];
+        localarray[i] = $scope.tasks[i];
+      }
+  localStorage.setItem('data',JSON.stringify(localarray));
+      $scope.output = JSON.parse(localStorage.getItem('data'));
+      console.log($scope.output.length);
+               
+          //  alert(JSON.stringify($scope.tasks))
 
         })
         };
-    $scope.store=function(){
+  /*  $scope.store=function(){
        var localarray = [];  
        for (var i = 0; i < $scope.tasks.length; i++)  //loop for storing the id in local localStorage
       {
         $window.localStorage[i] = $scope.tasks[i];
         localarray[i] = $scope.tasks[i];
       }
-  localStorage.setItem('data',localarray);
-      $scope.output = localStorage.getItem('data');
-      console.log($scope.output);
+  localStorage.setItem('data',JSON.stringify(localarray));
+      $scope.output = JSON.parse(localStorage.getItem('data'));
+      console.log($scope.output.length);
     
-   }
-     $scope.edit = function(task){
-        $scope.data = { response: task.title};
-        $ionicPopup.prompt({
-            title: "Edit Task",
-            scope: $scope
-        }).then(function(res){
-            if(res !== undefined) task.title = $scope.data.response;
-            $ionicListDelegate.closeOptionButtons()
-        })
-    };
+   }*/
 })

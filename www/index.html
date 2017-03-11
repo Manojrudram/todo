@@ -44,17 +44,11 @@
  <button class="button button-block button-positive" ng-click="newTask()">
 New
       </button>
-      <button class="button button-block button-positive" ng-click="store()">
-      add
-      </button>
-         <button class="button button-block button-positive" ng-click="edit()">
-      edit
-      </button>
+      <ul>
      <li class="item highlight" ng-repeat="x in output">
-          <div ng-click="content(x)">
-            <h4 style="color:#0D416C"> {{x}}</h4>
+          <h4 style="color:#0D416C"> {{x}}</h4>
           </div>
-        </li>
+        </li></ul>
     </ion-content>
     </ion-pane>
   </body>
