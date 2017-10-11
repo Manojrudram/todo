@@ -3,7 +3,8 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic', 'ngCordova'])
+angular.module('starter', ['ionic','firebase','ngCordova'])
+
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
@@ -21,51 +22,43 @@ angular.module('starter', ['ionic', 'ngCordova'])
     }
   });
 })
-
-.controller('DashCtrl', function($scope, $ionicPopup, $ionicListDelegate,$window) {
-       $scope.tasks = [];
-        $scope.newTask = function(){
-           $window.localStorage.clear(); 
-          
-        $ionicPopup.prompt({
-            title:"New Task",
-            template: "Enter task:",
-            inputPlaceholder:"Please add your task",
-            okText:'Create task'
-
-        }).then(function(res){
-          var pos = $scope.tasks.indexOf(res);
-            if (res) 
-             if (pos == -1) {
-          $scope.tasks.push(res);
-      }
-      else {
-         $scope.tasks.splice(pos, 1);
-      }
-           var localarray = [];  
-       for (var i = 0; i < $scope.tasks.length; i++)  //loop for storing the id in local localStorage
-      {
-        $window.localStorage[i] = $scope.tasks[i];
-        localarray[i] = $scope.tasks[i];
-      }
-  localStorage.setItem('data',JSON.stringify(localarray));
-      $scope.output = JSON.parse(localStorage.getItem('data'));
-      console.log($scope.output.length);
-               
-          //  alert(JSON.stringify($scope.tasks))
-
-        })
-        };
-  /*  $scope.store=function(){
-       var localarray = [];  
-       for (var i = 0; i < $scope.tasks.length; i++)  //loop for storing the id in local localStorage
-      {
-        $window.localStorage[i] = $scope.tasks[i];
-        localarray[i] = $scope.tasks[i];
-      }
-  localStorage.setItem('data',JSON.stringify(localarray));
-      $scope.output = JSON.parse(localStorage.getItem('data'));
-      console.log($scope.output.length);
-    
-   }*/
+.config(function() {
+     var config = {
+    apiKey: "AIzaSyAQPInops7SFoQ8noM-I6cs0BLOQUgEVOU",
+    authDomain: "to-do-2bba1.firebaseapp.com",
+    databaseURL: "https://to-do-2bba1.firebaseio.com",
+    storageBucket: "to-do-2bba1.appspot.com",
+    messagingSenderId: "288185014686"
+  }
+    firebase.initializeApp(config);
 })
+
+.controller("ExampleController", function($scope,$firebaseArray,$firebaseAuth, $firebase) {
+ 
+    $scope.createEvent = function(title) {
+       var ref = firebase.database().ref();
+     var messagesRef = ref.child("messages");
+    var data = $firebaseArray(messagesRef);
+    
+      data.$add({
+        Todo : title
+      }).then(function(ref){
+        console.log(JSON.stringify(data))
+      }
+      ,function(err)
+      {alert(err)});
+    
+    /*
+    $cordovaCalendar.deleteEvent({
+    title: 'Space Race',
+    location: 'The Moon',
+    notes: 'Bring sandwiches',
+    startDate: new Date(2015, 0, 6, 18, 30, 0, 0, 0),
+    endDate: new Date(2015, 1, 6, 12, 0, 0, 0, 0)
+  }).then(function (result) {
+    alert(result)
+  }, function (err) {
+   alert(err)
+  });*/
+    }
+    });
